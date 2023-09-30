@@ -6,8 +6,19 @@ root.geometry("500x300")
 root.resizable(0,0)
 root.title("Decoder Python World and Encoder")
 
-Label(root, text = "ENCODE DECODE", font = "arial 20 bold").pack()
-Label(root, text = "Python World", font = "arial 20 bold").pack(side = BOTTOM)
+# Custom Fonts
+custom_font_title = ("Helvetica", 20, "bold")
+custom_font_label = ("Helvetica", 12)
+custom_font_button = ("Helvetica", 10, "bold")
+
+# Background Colors
+bg_color = "lightgray"
+button_bg_color = "lightblue"
+button_fg_color = "white"
+
+
+Label(root, text="ENCODE DECODE", font=custom_font_title).pack()
+Label(root, text="Python World", font=custom_font_title, fg="blue").pack(side=BOTTOM)
 
 Text = StringVar()
 Result = StringVar()
