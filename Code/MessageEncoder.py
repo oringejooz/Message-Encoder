@@ -6,6 +6,9 @@ root.geometry("500x300")
 root.resizable(0,0)
 root.title("Decoder Python World and Encoder")
 
+# Define fullscreen as a global variable
+fullscreen = False
+
 # Custom Fonts
 custom_font_title = ("Helvetica", 20, "bold")
 custom_font_label = ("Helvetica", 12)
@@ -52,6 +55,12 @@ def Reset():
     Text.set("")
     Result.set("")
 
+# Fullscreen Function
+def ToggleFullscreen():
+    global fullscreen
+    fullscreen = not fullscreen
+    root.attributes("-fullscreen", fullscreen)
+
 Label(root, font="arial 12 bold", text="MESSAGE").place(x=60, y=60)
 Entry(root, font="arial 10", textvariable=Text, bg="ghost white").place(x=290, y=60)
 
@@ -61,5 +70,8 @@ Button(root, font="arial 10 bold", text="ENCODE", command=Mode, bg="LightGrey", 
 Button(root, font="arial 10 bold", text="DECODE", command=DecodeText, bg="LightGrey", padx=2).place(x=60, y=190)
 Button(root, font="arial 10 bold", text="RESET", width=6, command=Reset, bg="LimeGreen", padx=2).place(x=80, y=230)
 Button(root, font="arial 10 bold", text="EXIT", width=6, command=Exit, bg="OrangeRed", padx=2, pady=2).place(x=180, y=230)
+
+# Full Screen Button
+Button(root, text="Max/Min Screen", width=12, command=ToggleFullscreen, bg="lightgray", font=custom_font_button).place(x=350, y=230)
 
 root.mainloop()
