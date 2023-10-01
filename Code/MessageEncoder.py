@@ -1,77 +1,68 @@
-from tkinter import *
+import tkinter as tk
+from tkinter import messagebox
+import mysql.connector
 
+# Connect to MySQL
+db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="Aanidhay_2004",
+    database="message_encoder_decoder"
+)
+cursor = db.cursor()
 
-root = Tk()
-root.geometry("500x300")
-root.resizable(0,0)
-root.title("Decoder Python World and Encoder")
+def encode_message():
+    message = entry.get()
+    encoded_message = ""
+    for char in message:
+        encoded_message += chr(ord(char) + 1)
+    encoded_entry.delete(0, tk.END)
+    encoded_entry.insert(0, encoded_message)
 
-# Define fullscreen as a global variable
-fullscreen = False
-
-# Custom Fonts
-custom_font_title = ("Helvetica", 20, "bold")
-custom_font_label = ("Helvetica", 12)
-custom_font_button = ("Helvetica", 10, "bold")
-
-# Background Colors
-bg_color = "lightgray"
-button_bg_color = "lightblue"
-button_fg_color = "white"
-
-
-Label(root, text="ENCODE DECODE", font=custom_font_title).pack()
-Label(root, text="Python World", font=custom_font_title, fg="blue").pack(side=BOTTOM)
-
-Text = StringVar()
-Result = StringVar()
-
-def Encode(message):
-        encoded = ""
-        for char in message:
-            encoded += chr(ord(char) + 1)  # Caesar cipher with a shift of 1
-        return encoded
-
-def Decode(encoded_message):
-    decoded = ""
+def decode_message():
+    encoded_message = encoded_entry.get()
+    decoded_message = ""
     for char in encoded_message:
-        decoded += chr(ord(char) - 1)  # Reverse the Caesar cipher
-    return decoded
+        decoded_message += chr(ord(char) - 1)
+    decoded_entry.delete(0, tk.END)
+    decoded_entry.insert(0, decoded_message)
 
-def Mode():
-    input_text = Text.get()
-    encoded_text = Encode(input_text)
-    Result.set(encoded_text)
+def save_to_database():
+    encoded_message = encoded_entry.get()
+    decoded_message = decoded_entry.get()
 
-def DecodeText():
-    encoded_text = Text.get()
-    decoded_text = Decode(encoded_text)
-    Result.set(decoded_text)
+    try:
+        cursor.execute("INSERT INTO messages (encoded_message, decoded_message) VALUES (%s, %s)",
+                       (encoded_message, decoded_message))
+        db.commit()
+        messagebox.showinfo("Success", "Message saved to database")
+    except Exception as e:
+        db.rollback()
+        messagebox.showerror("Error", str(e))
 
-def Exit():
-    root.destroy()
+# Create GUI
+root = tk.Tk()
+root.title("Message Encoder & Decoder")
 
-def Reset():
-    Text.set("")
-    Result.set("")
+label1 = tk.Label(root, text="Enter Message:")
+label1.pack()
 
-# Fullscreen Function
-def ToggleFullscreen():
-    global fullscreen
-    fullscreen = not fullscreen
-    root.attributes("-fullscreen", fullscreen)
+entry = tk.Entry(root)
+entry.pack()
 
-Label(root, font="arial 12 bold", text="MESSAGE").place(x=60, y=60)
-Entry(root, font="arial 10", textvariable=Text, bg="ghost white").place(x=290, y=60)
+encode_button = tk.Button(root, text="Encode", command=encode_message)
+encode_button.pack()
 
-Entry(root, font="arial 10 bold", textvariable=Result, bg="ghost white").place(x=290, y=150)
+encoded_entry = tk.Entry(root)
+encoded_entry.pack()
 
-Button(root, font="arial 10 bold", text="ENCODE", command=Mode, bg="LightGrey", padx=2).place(x=60, y=150)
-Button(root, font="arial 10 bold", text="DECODE", command=DecodeText, bg="LightGrey", padx=2).place(x=60, y=190)
-Button(root, font="arial 10 bold", text="RESET", width=6, command=Reset, bg="LimeGreen", padx=2).place(x=80, y=230)
-Button(root, font="arial 10 bold", text="EXIT", width=6, command=Exit, bg="OrangeRed", padx=2, pady=2).place(x=180, y=230)
+decode_button = tk.Button(root, text="Decode", command=decode_message)
+decode_button.pack()
 
-# Full Screen Button
-Button(root, text="Max/Min Screen", width=12, command=ToggleFullscreen, bg="lightgray", font=custom_font_button).place(x=350, y=230)
+decoded_entry = tk.Entry(root)
+decoded_entry.pack()
+
+save_button = tk.Button(root, text="Save to Database", command=save_to_database)
+save_button.pack()
 
 root.mainloop()
