@@ -1,77 +1,115 @@
 from tkinter import *
-
+import base64
+import time
 
 root = Tk()
-root.geometry("500x300")
-root.resizable(0,0)
-root.title("Decoder Python World and Encoder")
+root.geometry("1200x6000")
+root.title("Message Encryption and Decryption")
 
-# Define fullscreen as a global variable
-fullscreen = False
+Tops = Frame(root, width=1600, relief=SUNKEN)
+Tops.pack(side=TOP)
 
-# Custom Fonts
-custom_font_title = ("Helvetica", 20, "bold")
-custom_font_label = ("Helvetica", 12)
-custom_font_button = ("Helvetica", 10, "bold")
+f1 = Frame(root, width=800, height=700, relief=SUNKEN)
+f1.pack(side=LEFT)
 
-# Background Colors
-bg_color = "lightgray"
-button_bg_color = "lightblue"
-button_fg_color = "white"
+localtime = time.asctime(time.localtime(time.time()))
 
+lblInfo = Label(Tops, font=('helvetica', 50, 'bold'),
+                text="SECRET MESSAGING \n Vigenère cipher",
+                fg="Black", bd=10, anchor='w')
 
-Label(root, text="ENCODE DECODE", font=custom_font_title).pack()
-Label(root, text="Python World", font=custom_font_title, fg="blue").pack(side=BOTTOM)
+lblInfo.grid(row=0, column=0)
 
-Text = StringVar()
+lblInfo = Label(Tops, font=('arial', 20, 'bold'),
+                text=localtime, fg="Steel Blue",
+                bd=10, anchor='w')
+
+lblInfo.grid(row=1, column=0)
+
+Msg = StringVar()
+mode = StringVar()
 Result = StringVar()
 
-def Encode(message):
-        encoded = ""
-        for char in message:
-            encoded += chr(ord(char) + 1)  # Caesar cipher with a shift of 1
-        return encoded
-
-def Decode(encoded_message):
-    decoded = ""
-    for char in encoded_message:
-        decoded += chr(ord(char) - 1)  # Reverse the Caesar cipher
-    return decoded
-
-def Mode():
-    input_text = Text.get()
-    encoded_text = Encode(input_text)
-    Result.set(encoded_text)
-
-def DecodeText():
-    encoded_text = Text.get()
-    decoded_text = Decode(encoded_text)
-    Result.set(decoded_text)
-
-def Exit():
+def qExit():
     root.destroy()
 
 def Reset():
-    Text.set("")
+    Msg.set("")
+    mode.set("")
     Result.set("")
 
-# Fullscreen Function
-def ToggleFullscreen():
-    global fullscreen
-    fullscreen = not fullscreen
-    root.attributes("-fullscreen", fullscreen)
+lblMsg = Label(f1, font=('arial', 16, 'bold'),
+               text="MESSAGE", bd=16, anchor="w")
 
-Label(root, font="arial 12 bold", text="MESSAGE").place(x=60, y=60)
-Entry(root, font="arial 10", textvariable=Text, bg="ghost white").place(x=290, y=60)
+lblMsg.grid(row=1, column=0)
 
-Entry(root, font="arial 10 bold", textvariable=Result, bg="ghost white").place(x=290, y=150)
+txtMsg = Entry(f1, font=('arial', 16, 'bold'),
+               textvariable=Msg, bd=10, insertwidth=4,
+               bg="powder blue", justify='right')
 
-Button(root, font="arial 10 bold", text="ENCODE", command=Mode, bg="LightGrey", padx=2).place(x=60, y=150)
-Button(root, font="arial 10 bold", text="DECODE", command=DecodeText, bg="LightGrey", padx=2).place(x=60, y=190)
-Button(root, font="arial 10 bold", text="RESET", width=6, command=Reset, bg="LimeGreen", padx=2).place(x=80, y=230)
-Button(root, font="arial 10 bold", text="EXIT", width=6, command=Exit, bg="OrangeRed", padx=2, pady=2).place(x=180, y=230)
+txtMsg.grid(row=1, column=1)
 
-# Full Screen Button
-Button(root, text="Max/Min Screen", width=12, command=ToggleFullscreen, bg="lightgray", font=custom_font_button).place(x=350, y=230)
+lblmode = Label(f1, font=('arial', 16, 'bold'),
+                text="MODE(e for encrypt, d for decrypt)",
+                bd=16, anchor="w")
+
+lblmode.grid(row=3, column=0)
+
+txtmode = Entry(f1, font=('arial', 16, 'bold'),
+                textvariable=mode, bd=10, insertwidth=4,
+                bg="powder blue", justify='right')
+
+txtmode.grid(row=3, column=1)
+
+lblService = Label(f1, font=('arial', 16, 'bold'),
+                   text="The Result-", bd=16, anchor="w")
+
+lblService.grid(row=2, column=2)
+
+txtService = Entry(f1, font=('arial', 16, 'bold'),
+                   textvariable=Result, bd=10, insertwidth=4,
+                   bg="powder blue", justify='right')
+
+txtService.grid(row=2, column=3)
+
+def encode(clear):
+    enc = []
+    for i in range(len(clear)):
+        enc_c = chr((ord(clear[i]) + 3) % 256)
+        enc.append(enc_c)
+    return base64.urlsafe_b64encode("".join(enc).encode()).decode()
+
+def decode(enc):
+    dec = []
+    enc = base64.urlsafe_b64decode(enc).decode()
+    for i in range(len(enc)):
+        dec_c = chr((256 + ord(enc[i]) - 3) % 256)
+        dec.append(dec_c)
+    return "".join(dec)
+
+def Ref():
+    clear = Msg.get()
+    m = mode.get()
+
+    if m == 'e':
+        Result.set(encode(clear))
+    else:
+        Result.set(decode(clear))
+
+btnTotal = Button(f1, padx=16, pady=8, bd=16, fg="black",
+                  font=('arial', 16, 'bold'), width=10,
+                  text="Show Message", bg="powder blue",
+                  command=Ref).grid(row=7, column=1)
+
+btnReset = Button(f1, padx=16, pady=8, bd=16,
+                  fg="black", font=('arial', 16, 'bold'),
+                  width=10, text="Reset", bg="green",
+                  command=Reset).grid(row=7, column=2)
+
+btnExit = Button(f1, padx=16, pady=8, bd=16,
+                 fg="black", font=('arial', 16, 'bold'),
+                 width=10, text="Exit", bg="red",
+                 command=qExit).grid(row=7, column=3)
 
 root.mainloop()
+
