@@ -2,9 +2,17 @@ from tkinter import *
 import base64
 import time
 
+
+def copy_to_clipboard():
+    root.clipboard_clear()
+    root.clipboard_append(txtService.get())
+    root.update()  # Update clipboard
+
+
 root = Tk()
 root.geometry("1200x6000")
 root.title("Message Encryption and Decryption")
+
 
 Tops = Frame(root, width=1600, relief=SUNKEN)
 Tops.pack(side=TOP)
@@ -59,6 +67,7 @@ txtmode = Entry(f1, font=('arial', 16, 'bold'),
                 textvariable=mode, bd=10, insertwidth=4,
                 bg="powder blue", justify='right')
 
+
 txtmode.grid(row=3, column=1)
 
 lblService = Label(f1, font=('arial', 16, 'bold'),
@@ -110,6 +119,12 @@ btnExit = Button(f1, padx=16, pady=8, bd=16,
                  fg="black", font=('arial', 16, 'bold'),
                  width=10, text="Exit", bg="red",
                  command=qExit).grid(row=7, column=3)
+
+copy_button = Button(f1, padx=16, pady=8, bd=16, fg="black",
+                     font=('arial', 16, 'bold'), width=10,
+                     text="Copy to Clipboard", bg="yellow",
+                     command=copy_to_clipboard)
+copy_button.grid(row=7, column=0)
 
 root.mainloop()
 
