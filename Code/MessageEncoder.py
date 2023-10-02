@@ -7,7 +7,14 @@ def copy_to_clipboard():
     root.clipboard_clear()
     root.clipboard_append(txtService.get())
     root.update()  # Update clipboard
+    update_copied_label()
 
+def update_copied_label():
+    copied_label.config(text="Copied to clipboard")
+    root.after(2000, clear_copied_label)
+
+def clear_copied_label():
+    copied_label.config(text="")
 
 root = Tk()
 root.geometry("1200x6000")
@@ -22,8 +29,8 @@ f1.pack(side=LEFT)
 
 localtime = time.asctime(time.localtime(time.time()))
 
-lblInfo = Label(Tops, font=('helvetica', 50, 'bold'),
-                text="SECRET MESSAGING \n Vigenère cipher",
+lblInfo = Label(Tops, font=('cursive', 50, 'bold'),
+                text="SECRET MESSAGING \nENCRYPT & DECRYPT",
                 fg="Black", bd=10, anchor='w')
 
 lblInfo.grid(row=0, column=0)
@@ -122,9 +129,13 @@ btnExit = Button(f1, padx=16, pady=8, bd=16,
 
 copy_button = Button(f1, padx=16, pady=8, bd=16, fg="black",
                      font=('arial', 16, 'bold'), width=10,
-                     text="Copy to Clipboard", bg="yellow",
+                     text="Copy", bg="yellow",
                      command=copy_to_clipboard)
 copy_button.grid(row=7, column=0)
+
+# Add a label for displaying the "Copied to clipboard" message
+copied_label = Label(f1, font=('arial', 16, 'bold'), text="", fg="green")
+copied_label.grid(row=8, column=0, columnspan=4)
 
 root.mainloop()
 
