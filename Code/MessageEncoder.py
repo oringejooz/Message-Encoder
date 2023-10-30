@@ -16,6 +16,11 @@ def update_copied_label():
 def clear_copied_label():
     copied_label.config(text="")
 
+def update_time():
+    current_time = time.strftime("%Y-%m-%d %H:%M:%S")
+    lblInfo.config(text=current_time)
+    root.after(1000, update_time)  # Update time every 1000ms (1 second)
+
 root = Tk()
 root.geometry("1200x6000")
 root.title("Message Encryption and Decryption")
@@ -132,6 +137,8 @@ copy_button = Button(f1, padx=16, pady=8, bd=16, fg="black",
                      text="Copy", bg="yellow",
                      command=copy_to_clipboard)
 copy_button.grid(row=7, column=0)
+
+update_time() 
 
 # Add a label for displaying the "Copied to clipboard" message
 copied_label = Label(f1, font=('arial', 16, 'bold'), text="", fg="green")
