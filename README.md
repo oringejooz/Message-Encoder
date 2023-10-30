@@ -5,7 +5,7 @@
 
 ## Features
 
-- Based on Vigenère cipher
+- Based on Caesar cipher (each character's ASCII code is shifted three positions to the right (e.g., 'A' becomes 'D', 'B' becomes 'E', etc.))
 - Encryption and Decryption
 - Responsive design
 
@@ -31,6 +31,20 @@ These instructions will help you get a copy of the project up and running on you
 3. Run the code
 
 
+## Use Case
+
+![image](https://github.com/Aanidhay/Message-Encoder/assets/124855325/5dc9d3d3-b2c0-477f-b8e3-a07f4f20767d)
+
+![image](https://github.com/Aanidhay/Message-Encoder/assets/124855325/dce67809-bdb2-47fa-b111-67f4669fb9c3)
+
+
+
+
 ## Authors
-- [Swarnima Bisht](https://github.com/oringejooz)
+- [Swarnima Bisht](https://github.com/swarnima2411)
 - [Aanidhay Aggrawal](https://github.com/Aanidhay)
+
+
+## Feedback
+
+https://docs.google.com/forms/d/e/1FAIpQLSfk2E7UUKCRJr5dP8a6-xwblM5P-0Cm8UM-2a1AApzScpBSVw/viewform?usp=sharing
